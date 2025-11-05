@@ -139,7 +139,7 @@ def run_backtest():
     start_date = data.get('startDate')
     end_date = data.get('endDate')
 
-    if not all([symbol, start_date, end_.envnd_date]):
+    if not all([symbol, start_date, end_date]):
         return jsonify({"status": "error", "message": "Missing parameters."}), 400
 
     try:
