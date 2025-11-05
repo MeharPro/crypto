@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-selfcheck.json
+
+# macOS
+.DS_Store
+
+# Xcode
+build/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/sharedata/
+*.xccheckout
+DerivedData/
+*.moved-aside
+xcuserdata/
+*.hmap
+*.ipa
+*.dSYM/
+.swiftpm/
