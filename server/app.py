@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 import pandas as pd
 import threading
 import time
+from backtester import Backtester
 
 app = Flask(__name__)
 
@@ -36,8 +37,9 @@ class TradingBot:
             print(f"Error getting signal for {symbol}: {e}")
             return None
 
-    def trading_loop(self, investment_amount, risk_level):
+    def trading_loop(self, investment_amount, risk_level, target_roi, timeframe):
         """The main trading loop."""
+        print(f"Trading loop started with target ROI: {target_roi}% over {timeframe}.")
         symbols = ['AAPL', 'GOOGL', 'MSFT']
         while self.running:
             for symbol in symbols:
@@ -68,7 +70,7 @@ class TradingBot:
         if self.running:
             return
         self.running = True
-        self.thread = threading.Thread(target=self.trading_loop, args=(investment_amount, risk_level))
+        self.thread = threading.Thread(target=self.trading_loop, args=(investment_amount, risk_level, target_roi, timeframe))
         self.thread.start()
         print("Trading bot started.")
 
@@ -126,6 +128,27 @@ def stop_bot():
 @app.route('/status', methods=['GET'])
 def get_status():
     return jsonify(bot.get_status())
+
+
+# --- Backtesting Endpoint ---
+@app.route('/backtest', methods=['POST'])
+def run_backtest():
+    """Runs a backtest for a given symbol and date range."""
+    data = request.json
+    symbol = data.get('symbol')
+    start_date = data.get('startDate')
+    end_date = data.get('endDate')
+
+    if not all([symbol, start_date, end_.envnd_date]):
+        return jsonify({"status": "error", "message": "Missing parameters."}), 400
+
+    try:
+        backtester = Backtester(start_date=start_date, end_date=end_date)
+        results = backtester.run(symbol=symbol)
+        return jsonify(results)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(port=5001)

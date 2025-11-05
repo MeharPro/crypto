@@ -44,6 +44,12 @@ struct ContentView: View {
                     }
                 }
 
+                Section(header: Text("Simulation")) {
+                    NavigationLink(destination: BacktestView()) {
+                        Text("Run Backtest")
+                    }
+                }
+
                 Section(header: Text("Status")) {
                     Text(botStatus)
                 }
